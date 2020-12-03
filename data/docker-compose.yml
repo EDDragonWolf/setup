@@ -4,6 +4,8 @@ x-redash-service: &redash-service
   depends_on:
     - postgres
     - redis
+  links:
+    - mysql_datasource
   env_file: /opt/redash/env
   restart: always
 services:
@@ -41,6 +43,14 @@ services:
     volumes:
       - /opt/redash/postgres-data:/var/lib/postgresql/data
     restart: always
+  mysql_datasource:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: qwerty
+    ports:
+      - "13306:3306"
+    volumes:
+      - /opt/redash/mysql-data:/var/lib/mysql
   nginx:
     image: redash/nginx:latest
     ports:
